@@ -2,8 +2,13 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  root 'notifications#index'
+  get 'ping' => proc { [200, {"Content-Type" => "text/plain"}, ["Pong!" ]] }
+  post 'notifications' => 'notifications#create'
+  get 'notifications/clear' => 'notifications#clear'
+  get 'notifications/all' => 'notifications#all'
+
+  
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

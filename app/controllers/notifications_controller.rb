@@ -24,7 +24,7 @@ class NotificationsController < ApplicationController
 	end
 
 	def all
-		@notifications = Notification.all
+		@notifications = Notification.all.order(created_at: :desc)
 	end
 
 	private

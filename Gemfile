@@ -48,3 +48,7 @@ group :development, :test do
   gem 'pry'
   gem "sqlite3"
 end
+
+
+gem 'faraday'
+gem 'typhoeus', '~> 0.6.8'

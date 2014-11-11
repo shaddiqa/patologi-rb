@@ -12,7 +12,8 @@ class NotificationsController < ApplicationController
 			params.delete('controller')
 			params.delete('notification')
 			@notification = Notification.new
-			@notification.message = params.to_s
+			@notification.order_id = params[:order_id]
+			@notification.message = params.to_json
 			@notification.save
 		rescue Exception => e
 			render_message(500, "Error while trying to create new TrueFalseQuestion.", e.message)
@@ -25,6 +26,10 @@ class NotificationsController < ApplicationController
 
 	def all
 		@notifications = Notification.all.order(created_at: :desc)
+	end
+
+	def show
+		@notifications = Notification.where(order_id: params[:order_id])
 	end
 
 	private

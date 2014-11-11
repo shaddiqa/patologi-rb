@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   post 'notifications' => 'notifications#create'
   get 'notifications/clear' => 'notifications#clear'
   get 'notifications/all' => 'notifications#all'
+  get 'notification/:order_id' => 'notifications#show'
 
   
 

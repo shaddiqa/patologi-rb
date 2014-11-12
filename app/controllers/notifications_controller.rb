@@ -20,6 +20,11 @@ class NotificationsController < ApplicationController
 		end
 	end
 
+	def create_error
+		create
+		render status: 500
+	end
+
 	def clear
 		Notification.destroy_all
 	end

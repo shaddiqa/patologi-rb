@@ -5,11 +5,10 @@ Rails.application.routes.draw do
   root 'notifications#index'
   get 'ping' => proc { [200, {"Content-Type" => "text/plain"}, ["Pong!" ]] }
   post 'notifications' => 'notifications#create'
+  post 'notifications/error' => 'notifications#create_error' 
   get 'notifications/clear' => 'notifications#clear'
   get 'notifications/all' => 'notifications#all'
   get 'notification/:order_id' => 'notifications#show'
-
-  
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

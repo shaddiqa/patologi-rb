@@ -7,21 +7,11 @@ class NotificationsController < ApplicationController
 	end
 
 	def create
-		begin
-			params.delete('action')
-			params.delete('controller')
-			params.delete('notification')
-			@notification = Notification.new
-			@notification.order_id = params[:order_id]
-			@notification.message = params.to_json
-			@notification.save
-		rescue Exception => e
-			render_message(500, "Error while trying to create new TrueFalseQuestion.", e.message)
-		end
+		save!(true)
 	end
 
 	def create_error
-		create
+		save!(false)
 		render status: 500
 	end
 
@@ -34,14 +24,30 @@ class NotificationsController < ApplicationController
 	end
 
 	def show
-		@notifications = Notification.where(order_id: params[:order_id])
+		@notifications = Notification.where(order_id: params[:order_id], flag: params[:flag].to_b)
 	end
 
 	private
 		def render_message(status_code, message, exception=nil)
-	  	@result = { status_code: status_code,
+	  		@result = { status_code: status_code,
 	  									message: message,
-	  								exception: exception }
-	  	render status: status_code
-	  end
+	  									exception: exception }
+	  		render status: status_code
+	  	end
+
+	  	def save!(flag=true)
+	  		begin
+				params.delete('action')
+				params.delete('controller')
+				params.delete('notification')
+				@notification = Notification.new
+				@notification.order_id = params[:order_id]
+				@notification.message = params.to_json
+				@notification.flag = flag
+				@notification.save
+			rescue Exception => e
+				render_message(500, "Error while trying to create new TrueFalseQuestion.", e.message)
+			end
+	  	end
+
 end

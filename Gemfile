@@ -52,3 +52,4 @@ end
 
 gem 'faraday'
 gem 'typhoeus', '~> 0.6.8'
+gem 'wannabe_bool'

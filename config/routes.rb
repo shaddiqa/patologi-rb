@@ -4,11 +4,14 @@ Rails.application.routes.draw do
 
   root 'notifications#index'
   get 'ping' => proc { [200, {"Content-Type" => "text/plain"}, ["Pong!" ]] }
-  post 'notifications' => 'notifications#create'
-  post 'notifications/error' => 'notifications#create_error' 
+  post 'notifications/create' => 'notifications#create'
+  post 'notifications/create_error' => 'notifications#create_error' 
   get 'notifications/clear' => 'notifications#clear'
   get 'notifications/all' => 'notifications#all'
   get 'notifications' => 'notifications#show'
+  post 'notifications' => 'notifications#notify'
+  put 'notifications/toggle' => 'notifications#toggle'
+  get 'notifications/status' => 'notifications#show_notification_status_setting'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

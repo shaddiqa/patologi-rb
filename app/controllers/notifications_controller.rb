@@ -16,6 +16,16 @@ class NotificationsController < ApplicationController
     end
   end
 
+  def set_status
+    @notification_status = Setting.find_by_key('notification_status')
+    @notification_status.value = params[:status].to_b
+    @notification_status.save!
+    response_body = {
+      "status" => @notification_status.value.to_b
+    }
+    render text: response_body.to_json, status: 200, layout: false
+  end
+
   def toggle
     @notification_status = Setting.find_by_key('notification_status')
     @notification_status.value = (!@notification_status.value.to_b).to_s

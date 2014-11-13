@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   post 'notifications/error' => 'notifications#create_error' 
   get 'notifications/clear' => 'notifications#clear'
   get 'notifications/all' => 'notifications#all'
-  get 'notification/:order_id/:flag' => 'notifications#show'
+  get 'notifications' => 'notifications#show'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get 'notifications' => 'notifications#show'
   post 'notifications' => 'notifications#notify'
   put 'notifications/toggle' => 'notifications#toggle'
+  put 'notifications/status/:status' => 'notifications#set_status'
   get 'notifications/status' => 'notifications#show_notification_status_setting'
 
   # Example of regular route:

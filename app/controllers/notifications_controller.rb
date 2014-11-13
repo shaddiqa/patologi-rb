@@ -6,6 +6,34 @@ class NotificationsController < ApplicationController
 		@count = Notification.all.count
 	end
 
+  def notify
+    @notification_status = Setting.find_by_key('notification_status')
+    if(@notification_status.value.to_b)
+      save!
+      render text: '{"status": "OK"}', status: 200, layout: false
+    else
+      render text: '{"status": "Not OK"}', status: 500, layout: false
+    end
+  end
+
+  def toggle
+    @notification_status = Setting.find_by_key('notification_status')
+    @notification_status.value = (!@notification_status.value.to_b).to_s
+    @notification_status.save!
+    response_body = {
+      "status" => @notification_status.value.to_b
+    }
+    render text: response_body.to_json, status: 200, layout: false
+  end
+
+  def show_notification_status_setting
+    @notification_status = Setting.find_by_key('notification_status')
+    response_body = {
+      "status" => @notification_status.value.to_b
+    }
+    render text: response_body.to_json, status: 200, layout: false
+  end
+
 	def create
 		save!(true)
 	end

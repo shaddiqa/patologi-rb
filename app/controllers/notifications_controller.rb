@@ -16,6 +16,13 @@ class NotificationsController < ApplicationController
     end
   end
 
+  def panda
+    params[:order_id] = 'panda_order_id'
+    params[:status_code] = 'panda_status_code'
+    save!
+    render text: '{"status": "OK"}', status: 200, layout: false
+  end
+
   def set_status
     @notification_status = Setting.find_by_key('notification_status')
     @notification_status.value = params[:status].to_b

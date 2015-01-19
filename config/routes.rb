@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   put 'notifications/status/:status' => 'notifications#set_status'
   get 'notifications/status' => 'notifications#show_notification_status_setting'
 
+  post 'notifications/panda' => 'notifications#panda'
+
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

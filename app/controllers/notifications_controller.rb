@@ -17,10 +17,17 @@ class NotificationsController < ApplicationController
   end
 
   def panda
-    params[:order_id] = 'panda_order_id'
-    params[:status_code] = 'panda_status_code'
-    save!
-    render text: '{"status": "OK"}', status: 200, layout: false
+    if params[:paymentResult].nil? || params[:signatureKey].nil?
+      render text: '{"status": "Error", "message" : "Incomplete POST parameter. paymentResult and signatureKey must exist"}', status: 400, layout: false
+    else
+      params[:payment_result] = JSON.parse(Base64.urlsafe_decode64(params[:paymentResult]))
+      params[:signature_key] = params[:signatureKey]
+      params[:order_id] = params[:payment_result]["paymentId"]
+      params[:status_code] = params[:payment_result]["resultType"]
+
+      save!
+      render text: '{"status": "OK"}', status: 200, layout: false
+    end
   end
 
   def set_status
@@ -70,7 +77,6 @@ class NotificationsController < ApplicationController
 
 	def show
 		# @notifications = Notification.where(order_id: params[:order_id], flag: params[:flag].to_b)
-
 		@notifications = Notification.order('created_at desc')
     
     @notifications.where!('created_at > ?', search_params[:created_after])  if search_params[:created_after].present?

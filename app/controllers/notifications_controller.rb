@@ -17,12 +17,12 @@ class NotificationsController < ApplicationController
   end
 
   def panda
-    if params[:paymentResult].nil? || params[:signature].nil?
+    if params[:paymentInfo].nil? || params[:signature].nil?
       render text: '{"status": "Error", "message" : "Incomplete POST parameter. paymentResult and signature must exist"}', status: 400, layout: false
     else
-      params[:payment_result] = JSON.parse(Base64.urlsafe_decode64(params[:paymentResult]))
-      params[:order_id] = params[:payment_result]["paymentId"]
-      params[:status_code] = params[:payment_result]["resultType"]
+      params[:payment_info] = JSON.parse(Base64.urlsafe_decode64(params[:paymentInfo]))
+      params[:order_id] = params[:payment_info]["paymentId"]
+      params[:status_code] = params[:payment_info]["resultType"]
 
       save!
       render text: '{"status": "OK"}', status: 200, layout: false

@@ -8,8 +8,8 @@ class NotificationsController < ApplicationController
 
   def notify
     @notification_status = Setting.find_by_key('notification_status')
+
     if(@notification_status.value.to_b)
-      push_notification!
       save!
       render text: '{"status": "OK"}', status: 200, layout: false
     else
@@ -114,14 +114,5 @@ class NotificationsController < ApplicationController
 	def search_params
 		params.permit(:flag, :order_id, :status_code)
 	end
-
-  def push_notification!
-    begin
-      Pusher.trigger('veritrans_notification', 'on_notify', params)
-    rescue Exception => e
-      Rails.logger.debug "Push notification error"
-      Rails.logger.debug e.message
-    end
-  end
 
 end

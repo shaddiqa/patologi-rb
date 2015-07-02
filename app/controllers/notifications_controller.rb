@@ -8,9 +8,8 @@ class NotificationsController < ApplicationController
 
   def notify
     @notification_status = Setting.find_by_key('notification_status')
-    push_notification!
-
     if(@notification_status.value.to_b)
+      push_notification!
       save!
       render text: '{"status": "OK"}', status: 200, layout: false
     else

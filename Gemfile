@@ -45,6 +45,7 @@ group :development, :test do
   gem "sqlite3"
 end
 
+gem 'puma'
 
 gem 'faraday'
 gem 'typhoeus', '~> 0.6.8'

@@ -1,1 +1,54 @@
-<%= @count %> notification(s) found.
+<% unless @notifications.count == 0 %>
+
+<h1><%= @notifications.count %> notification.</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th class="coll-id">ID</th>
+      <th class="coll-date">Date</th>
+      <th class="coll-cat">Category</th>
+      <th class="coll-json">JSON</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @notifications.each do |notif| %>
+      <tr>
+        <td><%= notif.id %></td>
+        <td><%= better_date(notif.created_at) %></td>
+        <td><%= notif.category_key %></td>
+        <td><code><%= notif.message %></code></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% else %>
+<h1>0 notification.</h1>
+<% end %>
+
+<style>
+
+table {
+  border-spacing: 0px;
+  border-collapse: collapse;
+}
+
+table td, table th {
+  padding: 2px 4px;
+  border: 1px solid #ccc;
+}
+
+table thead th {
+  background: #f5f5f5;
+}
+
+table td {
+  word-break: break-all;
+}
+
+.coll-date {
+  width: 120px;
+}
+
+</style>

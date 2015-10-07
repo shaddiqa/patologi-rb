@@ -1,6 +1,28 @@
 <% unless @notifications.count == 0 %>
 
 <h1><%= @notifications.count %> notification.</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Date</th>
+      <th>Category</th>
+      <th>JSON</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @notifications.each do |notif| %>
+      <tr>
+        <td><%= notif.id %></td>
+        <td><%= better_date(notif.created_at) %></td>
+        <td><%= notif.category_key %></td>
+        <td><code><%= notif.message %></code></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
 <ol>
 	<% @notifications.each do |notif| %>
 	<li><%= notif.id %> - <%= notif.created_at %> - <%= notif.message %></li>

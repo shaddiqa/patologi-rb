@@ -1,10 +1,10 @@
 class NotificationsController < ApplicationController
-	skip_before_action :verify_authenticity_token
-	respond_to :json
+  skip_before_action :verify_authenticity_token
+  respond_to :json
 
-	def index
-		@count = Notification.all.count
-	end
+  def welcome
+    @count = Notification.all.count
+  end
 
   def notify
     @notification_status = Setting.find_by_key('notification_status')
@@ -58,61 +58,77 @@ class NotificationsController < ApplicationController
     render text: response_body.to_json, status: 200, layout: false
   end
 
-	def create
-		save!(true)
-	end
+  def create
+    save!(true)
+  end
 
-	def create_error
-		save!(false)
-		render status: 500
-	end
+  def create_error
+    save!(false)
+    render status: 500
+  end
 
-	def clear
-		Notification.destroy_all
-	end
+  def clear
+    Notification.destroy_all
+  end
 
-	def all
-		@notifications = Notification.all.order(created_at: :desc)
-	end
+  #def all
+  #  @notifications = Notification.all.order(created_at: :desc)
+  #end
 
-	def show
-		# @notifications = Notification.where(order_id: params[:order_id], flag: params[:flag].to_b)
-		@notifications = Notification.order('created_at desc')
-    
-    @notifications.where!('created_at > ?', search_params[:created_after])  if search_params[:created_after].present?
-	  @notifications.where!('created_at < ?', search_params[:created_before]) if search_params[:created_before].present?
-	  @notifications.where!(order_id: search_params[:order_id]) if search_params[:order_id].present?
-	  @notifications.where!(flag: search_params[:flag].to_b) if search_params[:flag].present?
-	  @notifications.where!(status_code: search_params[:status_code]) if search_params[:status_code].present?
+  def index
+    # @notifications = Notification.where(order_id: params[:order_id], flag: params[:flag].to_b)
+    @notifications = Notification.order('created_at desc')
 
-	end
+    if search_params[:created_after].present?
+      @notifications.where!('created_at > ?', search_params[:created_after])
+    end
+    if search_params[:created_before].present?
+      @notifications.where!('created_at < ?', search_params[:created_before])
+    end
+    if search_params[:order_id].present?
+      @notifications.where!(order_id: search_params[:order_id])
+    end
+    if search_params[:flag].present?
+      @notifications.where!(flag: search_params[:flag].to_b)
+    end
+    if search_params[:status_code].present?
+      @notifications.where!(status_code: search_params[:status_code])
+    end
+    if search_params[:category_key].present?
+      @notifications.where!(category_key: search_params[:category_key])
+    end
+  end
 
-	private
-		def render_message(status_code, message, exception=nil)
-		@result = { status_code: status_code,
-									message: message,
-									exception: exception }
-		render status: status_code
-	end
+  private
+    def render_message(status_code, message, exception = nil)
+    @result = { status_code: status_code,
+                message: message,
+                exception: exception }
+    render status: status_code
+  end
 
-	def save!(flag=true)
-		begin
-  		params.delete('action')
-  		params.delete('controller')
-  		params.delete('notification')
-  		@notification = Notification.new
-  		@notification.order_id = params[:order_id]
-  		@notification.status_code = params[:status_code]
-  		@notification.message = params.to_json
-  		@notification.flag = flag
-  		@notification.save
-  	rescue Exception => e
-  		render_message(500, "Error while trying to create new TrueFalseQuestion.", e.message)
-  	end
-	end
+  def save!(flag = true)
+    begin
+      #params.delete('action')
+      #params.delete('controller')
+      #params.delete('notification')
+      #post_params = ActiveSupport::JSON.decode(request.body.read).symbolize_keys
+      @notification = Notification.new
+      @notification.order_id = params[:order_id]
+      @notification.status_code = params[:status_code]
+      @notification.message = request.body.read
+      if params[:key].present?
+        @notification.category_key = params[:key]
+      end
+      @notification.flag = flag
+      @notification.save
+    rescue Exception => e
+      render_message(500, "Error while trying to create new TrueFalseQuestion.", e.message)
+    end
+  end
 
-	def search_params
-		params.permit(:flag, :order_id, :status_code)
-	end
+  def search_params
+    params.permit(:flag, :order_id, :status_code, :category_key)
+  end
 
 end

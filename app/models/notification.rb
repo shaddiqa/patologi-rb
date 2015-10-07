@@ -5,6 +5,9 @@ class Notification < ActiveRecord::Base
   def push_notification!
     begin
       Pusher.trigger('veritrans_notification', 'on_notify', pusher_message)
+      if category_key.present?
+        Pusher.trigger("veritrans_notification--#{category_key}", 'on_notify', pusher_message)
+      end
     rescue Exception => e
       Rails.logger.debug "Push notification error"
       Rails.logger.debug e.message

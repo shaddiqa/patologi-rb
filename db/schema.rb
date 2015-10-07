@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141113093341) do
+ActiveRecord::Schema.define(version: 20151007103028) do
 
   create_table "notifications", force: true do |t|
     t.text     "message"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20141113093341) do
     t.string   "order_id"
     t.boolean  "flag"
     t.string   "status_code"
+    t.string   "category_key"
   end
 
   create_table "settings", force: true do |t|

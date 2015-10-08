@@ -16,8 +16,8 @@ class Notification < ActiveRecord::Base
 
   def pusher_message
     json = as_json
-    message_obj =  JSON.parse( json['message'] ) if json['message']
-    json['message'] = message_obj
+    #message_obj =  JSON.parse( json['message'] ) if json['message']
+    #json['message'] = message_obj
     json
   end
 end

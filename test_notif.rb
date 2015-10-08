@@ -2,11 +2,11 @@ require 'uri'
 require 'net/http'
 
 uri = URI("http://localhost:3000/notifications?key=someKey")
+#uri = URI("http://patologi-pasha.herokuapp.com/notifications?key=someKey")
 
 request = Net::HTTP::Post.new(uri.path + "?" + uri.query)
 
 request["Content-Type"] = 'application/json'
-#request["HEADER2"] = 'VALUE2'
 
 request.body = %!
 {

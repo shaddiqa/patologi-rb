@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+
+require 'pusher-client'
+require 'uri'
+require 'net/http'
+
+APPLICATION_KEY = 'bbb02e60c30551279621'
+CHANNEL_NAME = 'veritrans_notification--garuda_web'
+
+NOTIFICATION_URL = ARGV.first || "http://localhost:3000/vt-notify"
+
+puts "Replying notifications to #{NOTIFICATION_URL}"
+
+def replay_request(data)
+  uri = URI(NOTIFICATION_URL)
+  request = Net::HTTP::Post.new(uri.path + (uri.query ? ("?" + uri.query) : ""))
+
+  request["Content-Type"] = 'application/json'
+  request.body = data
+
+  puts "Replying request:\nPOST #{NOTIFICATION_URL}"
+  puts data
+
+  response = Net::HTTP.start(uri.host, uri.port) do |http|
+    http.request(request)
+  end
+
+  puts "---"
+  puts "GOT #{response.code} (#{response.message})"
+  puts response.body
+end
+
+socket = PusherClient::Socket.new(APPLICATION_KEY, secure: true)
+socket.subscribe(CHANNEL_NAME)
+
+#socket[CHANNEL_NAME].bind('channelevent') do |data|
+#  replay_request(data)
+#  puts data
+#end
+
+socket[CHANNEL_NAME].bind('on_notify') do |data|
+  begin
+    puts "Recieved notification"
+    data = JSON.parse(data)
+    notification_body = data['message']
+    replay_request(notification_body)
+  rescue => error
+    puts error.message
+    puts error.backtrace
+  end
+end
+
+socket.connect
